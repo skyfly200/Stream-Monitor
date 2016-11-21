@@ -9,11 +9,11 @@ Download the zip  file and extract the contents.
 
 Open a terminal in the Stream-Monitor folder
 
-Run the script in the terminal like so
-<i>python BuffMon.py</i>
+Run the script in the terminal like so<br>
+<b><i>python BuffMon.py</i></b>
 
-Optionaly run the script with a timeout in 24 hour time like so
-<i>python BuffMon.py 14:30</i>
+Optionaly run the script with a timeout in 24 hour time like so<br>
+<b><i>python BuffMon.py 14:30</i></b>
 (stop monitoring the stream at 2:30 PM)
 
 Script resets stream untill resets are exhausted.
