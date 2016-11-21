@@ -1,0 +1,14 @@
+<settings>
+	<!-- milliseconds between reads -->
+	<rate>250</rate>
+	<!-- miliiseconds of offset to allow before counting a skip -->
+  <offset>50</offset>
+	<!-- range of skip monitor in milliseconds -->
+	<range>2800</range>
+	<!-- max skips before restart -->
+	<skip-limit>3</skip-limit>
+	<!-- resets before fallback -->
+	<resets>3</resets>
+	<!-- playlist file to fallback on after resets are exhausted -->
+	<fallback>glr.pls</fallback>
+</settings>
