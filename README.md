@@ -13,7 +13,7 @@ Run the script in the terminal like so<br>
 <b><i>python BuffMon.py</i></b>
 
 Optionaly run the script with a timeout in 24 hour time like so<br>
-<b><i>python BuffMon.py 14:30</i></b>
+<b><i>python BuffMon.py 14:30</i></b><br>
 (stop monitoring the stream at 2:30 PM)
 
 Script resets stream untill resets are exhausted.
