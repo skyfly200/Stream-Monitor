@@ -1,10 +1,7 @@
-import utils, sys, time
+import sys, time
 
-# import Clever Library
-import clever
-
-# import icecast stats library
-import stats
+# import Clever Library, icecast stats library, utilities, bufferLib
+import utils, stats, clever, bufferLib
 
 # import tendo singleton class
 import singleton
@@ -50,7 +47,7 @@ serverUrl = config.getSetting("server-url")
 
 # store last client connect time
 clientConnect = stats.streamTime(serverUrl)
-connect_log.log("Client Connect*: " + str(clientConnect))
+connect_log.log("Initial Reading: " + str(clientConnect))
 
 # set time to stop monitoring stream
 # get from arg if available
@@ -87,8 +84,9 @@ try:
 				if debuging: print "# of Skips: ", len(skips)
 
 				# if skip limit is reached in range, try reset
-				if (len(skips) > skipLimit) and (time.time() - skips[-skipLimit][1]) <= skipRange:
+				if (len(skips) > skipLimit) and checkSkips(skipRange): #(time.time() - skips[-skipLimit][1]) <= skipRange:
 					buffer_log.log("Stream Restart")
+					print checkSkips(skipRange)
 					if resetsUsed < resets:
 						clever.stop()
 						clever.play()
@@ -100,8 +98,6 @@ try:
 					else:
 						clever.loadplay(fallback)
 						raise Exception("buffer fallback")
-				else:
-					buffer_log.log("Stream Buffer")
 
         # delay before next read
 		time.sleep(rate/1000.0)
