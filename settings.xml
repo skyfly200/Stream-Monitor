@@ -1,4 +1,6 @@
 <settings>
+	<!-- URL of the icecast server o monitor -->
+  <server-url>http://162.243.92.85:8000</server-url>
 	<!-- milliseconds between reads -->
 	<rate>250</rate>
 	<!-- miliiseconds of offset to allow before counting a skip -->

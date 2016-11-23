@@ -4,7 +4,7 @@ import xml.etree.ElementTree as xmlProcessor
 # class for manipulating the log file
 class log(object):
 	# open or create log file
-	def __init__(self, path="log.txt", name="Winamp Automation"):
+	def __init__(self, path="log.txt", name="Log File"):
 		self.logPath = path
 		self.logName = name
 		# check if file exists
@@ -15,9 +15,9 @@ class log(object):
 				f.write("---" + self.logName + " Log File---\n")
 
 	# log any value to the log file
-	def log(self, log, time):
+	def log(self, log):
 		with open(self.logPath, 'a') as f:
-			f.write(time.getDatetimeStr() + " :\n" + str(log) + "\n")
+			f.write(time.strftime('%c') + " :\n" + str(log) + "\n")
 
 	# return the last log in the log file
 	def lastLog(self):
