@@ -37,7 +37,6 @@ skipLimit = int(config.getSetting("skip-limit"))
 
 # resets before fallback
 resets = int(config.getSetting("resets"))
-resetsUsed = 0
 
 # fallback file
 fallback = config.getSetting("fallback")
@@ -48,6 +47,8 @@ serverUrl = config.getSetting("server-url")
 # store last client connect time
 clientConnect = stats.streamTime(serverUrl)
 connect_log.log("Initial Reading: " + str(clientConnect))
+lastCheck = time.time()
+sourceCheckRate = 60 # rate in seconds to check stream connect time
 
 # set time to stop monitoring stream
 # get from arg if available
@@ -63,38 +64,40 @@ skips = []
 try:
 	# loop till stop time
 	while not utils.past(stopTime):
-		# read server stats
-		statRead = stats.streamTime(serverUrl)
-		if statRead != clientConnect:
-		    clientConnect = statRead
-		    connect_log.log("Client Reconnect: " + str(clientConnect))
+		# read server stats in interval
+		if (time.time() - lastCheck) >= sourceCheckRate:
+			statRead = stats.streamTime(serverUrl)
+			if statRead != clientConnect:
+			    clientConnect = statRead
+			    connect_log.log("Client Reconnect: " + str(clientConnect))
 		# read position in stream
 		reads.append([clever.position(), time.time()])
 		print ""
 		l = len(reads)
-		# begin monitoring once 1 second has occured
+		# begin monitoring once t least 1 second has occured
 		if l > ratePS:
-			readDiff = (reads[l-1][0] - reads[l-(ratePS + 1)][0]) / 1000.0
-			clockDiff = reads[l-1][1] - reads[l-(ratePS + 1)][1]
+			readDiff = (reads[-1][0] - reads[-ratePS][0]) / 1000.0
+			clockDiff = reads[-1][1] - reads[-ratePS][1]
 			skip = abs(readDiff - clockDiff) > offset
-			if debuging: print readDiff - clockDiff, skip
+			if debuging and skip: print readDiff - clockDiff
 
 			if skip:
 				skips.append(reads[l-(ratePS + 1)])
 				if debuging: print "# of Skips: ", len(skips)
 
 				# if skip limit is reached in range, try reset
-				if (len(skips) > skipLimit) and checkSkips(skipRange): #(time.time() - skips[-skipLimit][1]) <= skipRange:
+				if (len(skips) > skipLimit) and bufferLib.checkSkips(skips, skipLimit, skipRange): #(time.time() - skips[-skipLimit][1]) <= skipRange:
 					buffer_log.log("Stream Restart")
-					print checkSkips(skipRange)
-					if resetsUsed < resets:
+					# if more resets are left reset stream
+					if resets > 0:
 						clever.stop()
 						clever.play()
 						skips = []
-						resetsUsed += 1
+						resets -= 1
 						while (clever.position() == 0):
 							pass
 						time.sleep(skipRange)
+					# otherwise load the fallback file
 					else:
 						clever.loadplay(fallback)
 						raise Exception("buffer fallback")

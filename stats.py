@@ -10,8 +10,12 @@ def streamTime(serverUrl):
     # gets stats from icecast server in JSON format
     res = streamStats(serverUrl)
 
-    # parse client start timestamp from server stats
-    connect_timestamp_iso = json.loads(res.text)['icestats']['source']['stream_start_iso8601']
+    # catch errors in processing JSON
+    try:
+        # parse client start timestamp from server stats
+        connect_timestamp_iso = json.loads(res.text)['icestats']['source']['stream_start_iso8601']
+    except:
+        print "Server JSON processing error", res.txt
 
     # convert timestamp from ISO8601 format to python datetime object
     connect_timestamp = iso8601.parse_date(connect_timestamp_iso)

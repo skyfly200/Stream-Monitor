@@ -6,7 +6,7 @@
 	<!-- miliiseconds of offset to allow before counting a skip -->
   <offset>50</offset>
 	<!-- range of skip monitor in milliseconds -->
-	<range>2800</range>
+	<range>2000</range>
 	<!-- max skips before restart -->
 	<skip-limit>3</skip-limit>
 	<!-- resets before fallback -->
