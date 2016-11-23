@@ -86,14 +86,15 @@ try:
 				if debuging: print "# of Skips: ", len(skips)
 
 				# if skip limit is reached in range, try reset
-				if (len(skips) > skipLimit) and bufferLib.checkSkips(skips, skipLimit, skipRange): #(time.time() - skips[-skipLimit][1]) <= skipRange:
+				if (len(skips) > skipLimit) and bufferLib.checkSkips(skips, skipLimit, skipRange):
 					buffer_log.log("Stream Restart")
-					# if more resets are left reset stream
-					if resets > 0:
+					# if more resets are not exhusted stream
+					if resets != 0:
 						clever.stop()
 						clever.play()
 						skips = []
-						resets -= 1
+						reads = reads[-ratePS:]
+						if resets > 0: resets -= 1
 						while (clever.position() == 0):
 							pass
 						time.sleep(skipRange)
@@ -101,6 +102,8 @@ try:
 					else:
 						clever.loadplay(fallback)
 						raise Exception("buffer fallback")
+				else:
+					skips = skips[-skipLimit:]
 
         # delay before next read
 		time.sleep(rate/1000.0)

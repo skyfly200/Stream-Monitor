@@ -6,4 +6,5 @@ def checkSkips(skips, limit, r):
     for s in skips:
         if (t - s[1]) <= r:
             count += 1
+    print count
     return count >= limit
